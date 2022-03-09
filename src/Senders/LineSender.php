@@ -3,18 +3,19 @@
 namespace CarroPublic\Notifications\Senders;
 
 use LINE\LINEBot;
-use JsonResponse;
 use InvalidArgumentException;
+use Illuminate\Support\Facades\Log;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use CarroPublic\Notifications\Responses\JsonResponse;
 
 class LineSender extends Sender
 {
     protected $client;
     
-    public function __construct($config)
+    public function __construct($config, $events)
     {
-        parent::__construct($config);
+        parent::__construct($config, $events);
         if (empty($config['secret']) || empty($config['token'])) {
             throw new InvalidArgumentException('Missing secret or token for LineSender in config/notifications.php');
         }
@@ -37,6 +38,8 @@ class LineSender extends Sender
             $this->client->pushMessage($to, $attachment, true);
         }
 
-        return new JsonResponse($response);
+        return new JsonResponse(json_encode([
+            'id' => $response->getHeader('x-line-request-id')
+        ]));
     }
 }

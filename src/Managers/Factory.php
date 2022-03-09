@@ -1,6 +1,8 @@
 <?php
 
-namespace CarroPublic\Notifications\Senders;
+namespace CarroPublic\Notifications\Managers;
+
+use CarroPublic\Notifications\Senders\Sender;
 
 interface Factory
 {

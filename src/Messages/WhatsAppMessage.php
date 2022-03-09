@@ -2,7 +2,7 @@
 
 namespace CarroPublic\Notifications\Messages;
 
-class TwilioMessage extends Message
+class WhatsAppMessage extends Message
 {
     /**
      * @var

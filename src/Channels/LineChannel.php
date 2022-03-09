@@ -22,34 +22,30 @@ class LineChannel
     /**
      * @param $notifiable
      * @param $notification
-     * @return bool
+     * @return void
      */
     public function send($notifiable, $notification)
     {
+        if (!method_exists($notification, 'toLine')) {
+            throw new \InvalidArgumentException('toLine was missing in ' . get_class($notification));
+        }
+        $message = $notification->toLine($notifiable);
+
+        if (!$message instanceof LineMessage) {
+            throw new \InvalidArgumentException('toLine() must return CarroPublic\Notifications\Messages\LineMessage instance');
+        }
+
         // Fetch recipient line id
-        if (!$to = $notifiable->routeForNotification('line')) {
-            if (!$to = $notifiable->routeForNotification(LineChannel::class)) {
-                return false;
+        if (! $to = $notifiable->routeNotificationFor('line')) {
+            if (! $to = $notifiable->routeNotificationFor(LineChannel::class)) {
+                return;
             }
         }
 
-        // Fetch payload Line Message
-        if (!method_exists($notification, 'toLine')) {
-            return false;
-        }
-
-        $lineMessage = $notification->toLine();
-
-        if (!$lineMessage instanceof LineMessage) {
-            throw new \InvalidArgumentException(
-                'toLine() must return CarroPublic\Notifications\Messages\LineMessage instance'
-            );
-        }
-
-        $response = $this->manager->sender('line')->send($to, $lineMessage);
+        $response = $this->manager->sender('line')->send($to, $message);
 
         if ($this->events) {
-            $this->events->dispatch(new NotificationWasSent($response, $lineMessage->data));
+            $this->events->dispatch(new NotificationWasSent($response, $message->data));
         }
 
         return $response;

@@ -3,8 +3,8 @@
 namespace CarroPublic\Notifications\Managers;
 
 use InvalidArgumentException;
+use Illuminate\Events\Dispatcher;
 use CarroPublic\Notifications\Senders\Sender;
-use CarroPublic\Notifications\Senders\Factory;
 use CarroPublic\Notifications\Senders\LineSender;
 use CarroPublic\Notifications\Senders\TwilioSender;
 use CarroPublic\Notifications\Senders\TelerivetSender;
@@ -19,10 +19,13 @@ class SenderManager implements Factory
     protected $senders = [];
 
     protected $config;
+    
+    protected $events;
 
     public function __construct($app)
     {
         $this->config = $app['config'];
+        $this->events = $app['events'];
     }
 
     /**
@@ -31,9 +34,9 @@ class SenderManager implements Factory
      * @param string $name
      * @return Sender
      */
-    public function sender($channel, $name = null)
+    public function sender($service, $name = null)
     {
-        return $this->senders[$channel][$name] ?? $this->resolve($channel, $name);
+        return $this->senders[$service][$name] ?? $this->resolve($service, $name);
     }
 
     /**
@@ -44,38 +47,56 @@ class SenderManager implements Factory
      *
      * @throws \InvalidArgumentException
      */
-    protected function resolve($channel, $name)
+    protected function resolve($service, $name)
     {
-        $config = $this->getConfig($channel, $name);
+        $config = $this->getConfig($service, $name);
 
         if (is_null($config)) {
-            throw new InvalidArgumentException("Channel [{$channel}] with sender [{$name}] is not defined in config.");
+            throw new InvalidArgumentException("Service [{$service}] with sender [{$name}] is not defined in config.");
         }
 
-        if (!method_exists($this, $method = 'create' . ucfirst($channel) . 'Channel')) {
-            throw new InvalidArgumentException("Unsupported transport [{$channel}] for service .");
+        // Default transport of the service would be used when no transport was specified
+        $transport = trim($config['transport'] ?? data_get($this->getConfig($service), 'transport'));
+        
+        // This service do not support multiple transports
+        // Return Sender creation
+        if (empty($transport)) {
+            if (!method_exists($this, $serviceMethod = 'create' . ucfirst($service) . 'Service')) {
+                throw new InvalidArgumentException("Unsupported service [{$service}].");
+            }
+            
+            return $this->{$serviceMethod}($config);
+        }
+
+        if (!method_exists($this, $method = 'create' . ucfirst($transport) . 'Transport')) {
+            throw new InvalidArgumentException("Unsupported transport [{$transport}] for service .");
         }
         
         return $this->{$method}($config);
     }
 
-    protected function createTwilioChannel($config)
+    protected function createTwilioService($config)
     {
-        return new TwilioSender($config);
+        return new TwilioSender($config, $this->events);
     }
 
-    protected function createTelerivetChannel($config)
+    protected function createTelerivetService($config)
     {
-        return new TelerivetSender($config);
+        return new TelerivetSender($config, $this->events);
     }
 
     /**
      * @param $config
      * @return LineSender
      */
-    protected function createLineChannel($config)
+    protected function createLineService($config)
     {
-        return new LineSender($config);
+        return new LineSender($config, $this->events);
+    }
+
+    protected function createTwilioTransport($config)
+    {
+        return new TwilioSender($config, $this->events);
     }
 
     /**
@@ -84,12 +105,12 @@ class SenderManager implements Factory
      * @param string $name
      * @return array
      */
-    protected function getConfig($channel, $name = null)
+    protected function getConfig($service, $name = null)
     {
-        if (is_null($name)) {
-            return $this->config->get("{$channel}.default");
+        if (empty($name)) {
+            return $this->config->get("notifications.{$service}.default");
         }
 
-        return $this->config->get("{$channel}.senders.{$name}");
+        return $this->config->get("notifications.{$service}.senders.{$name}");
     }
 }

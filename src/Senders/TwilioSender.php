@@ -6,9 +6,10 @@ use Twilio\Rest\Api;
 use Twilio\Rest\Client;
 use Twilio\Rest\Api\V2010;
 use InvalidArgumentException;
+use Illuminate\Events\Dispatcher;
 use CarroPublic\Notifications\Messages\Message;
 use Twilio\Rest\Api\V2010\Account\MessageInstance;
-use CarroPublic\Notifications\Messages\TwilioMessage;
+use CarroPublic\Notifications\Messages\WhatsAppMessage;
 
 class TwilioSender extends Sender
 {
@@ -22,9 +23,9 @@ class TwilioSender extends Sender
     /**
      * Initialize Twilio account sid and auth token
      */
-    public function __construct($config)
+    public function __construct($config, Dispatcher $events)
     {
-        parent::__construct($config);
+        parent::__construct($config, $events);
         if (empty($config['account_sid']) || empty($config['auth_token'])) {
             throw new InvalidArgumentException('Missing account_sid or auth_token for TwilioSender in config/notifications.php');
         }
@@ -52,8 +53,10 @@ class TwilioSender extends Sender
             $payload['mediaUrl'] = $message->mediaUrls;
         }
 
+        $isWhatsApp = $message instanceof WhatsAppMessage;
+        
         return $this->client->messages->create(
-            $message->isWhatsApp ? "whatsapp:" . $to : $to,
+            $isWhatsApp ? "whatsapp:" . $to : $to,
             $payload
         );
     }
@@ -62,15 +65,8 @@ class TwilioSender extends Sender
      * Get default from phone number
      * @return mixed
      */
-    public function getDefaultFrom($whatsApp)
+    public function getDefaultFrom()
     {
-        if ($whatsApp) {
-            return data_get($this->config, 'whatsapp_from', data_get(
-                $this->config,
-                'default.whatsapp_from'
-            ));
-        }
-
         return data_get($this->config, 'from', data_get($this->config, 'default.from'));
     }
 
@@ -81,8 +77,9 @@ class TwilioSender extends Sender
      */
     protected function getFrom(Message $message)
     {
-        $from = $message->from ?? $this->getDefaultFrom($message->isWhatsApp);
+        $isWhatsApp = $message instanceof WhatsAppMessage;
+        $from = $message->from ?? $this->getDefaultFrom();
 
-        return $message->isWhatsApp ? ("whatsapp:" . $from) : $from;
+        return $isWhatsApp ? ("whatsapp:" . $from) : $from;
     }
 }

@@ -22,9 +22,9 @@ class TelerivetSender extends Sender
     /**
      * Setting Telerivet API key and project id
      */
-    public function __construct($config)
+    public function __construct($config, $events)
     {
-        parent::__construct($config);
+        parent::__construct($config, $events);
         if (empty($config['api_key']) || empty($config['project_id'] || empty($config['number']))) {
             throw new InvalidArgumentException('Missing api_key or project_id or number for TelerivetSender in config/notifications.php');
         }

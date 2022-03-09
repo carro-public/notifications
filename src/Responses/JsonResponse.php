@@ -1,5 +1,7 @@
 <?php
 
+namespace CarroPublic\Notifications\Responses;
+
 class JsonResponse
 {
     protected $data;

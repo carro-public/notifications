@@ -9,6 +9,8 @@ class NotificationServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/notifications.php', 'notifications');
+        
         // Register the service the package provides.
         $this->app->singleton(SenderManager::class, function ($app) {
             return new SenderManager($app);
