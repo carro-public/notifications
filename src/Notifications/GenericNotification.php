@@ -26,6 +26,8 @@ class GenericNotification extends Notification implements ShouldQueue
     protected $sender;
     
     protected $data;
+    
+    protected $subject;
 
     /**
      * Create a new notification instance.
@@ -59,7 +61,14 @@ class GenericNotification extends Notification implements ShouldQueue
     }
     
     public function toMail($notifiable) {
-        return (new MailMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
+        $mailMessage = (new \Illuminate\Notifications\Messages\MailMessage())
+            ->view('notifications::mail', array_merge($this->data, ['body' => $this->body]))
+            ->subject($this->subject)
+            ->mailer($this->sender);
+        if ($this->from) {
+            $mailMessage->from($this->from);
+        }
+        return $mailMessage;
     }
 
     public function toSMS($notifiable)
@@ -99,6 +108,16 @@ class GenericNotification extends Notification implements ShouldQueue
     public function sender($sender)
     {
         $this->sender = $sender;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $subject
+     */
+    public function subject($subject)
+    {
+        $this->subject = $subject;
 
         return $this;
     }

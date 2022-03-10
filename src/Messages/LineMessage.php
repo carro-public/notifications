@@ -7,7 +7,7 @@ class LineMessage extends Message
     /**
      * @var
      */
-    public $attachments;
+    public $attachments = [];
 
     /**
      * @param mixed $attachments

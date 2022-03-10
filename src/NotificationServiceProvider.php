@@ -14,6 +14,10 @@ use CarroPublic\Notifications\Channels\WhatsAppChannel;
 
 class NotificationServiceProvider extends ServiceProvider
 {
+    public function boot() {
+        $this->loadViewsFrom(__DIR__.'/../views', 'notifications');
+    }
+    
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/notifications.php', 'notifications');
