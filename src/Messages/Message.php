@@ -77,7 +77,7 @@ abstract class Message
     protected function toArray($data)
     {
         if ($data instanceof Model) {
-            return get_class($data) . " ~ Table=" . $data->getTable() . " ~ ID=" . $data->getQueueableId();
+            return "Model: " . $data->getTable() . " ~ ID: " . $data->getQueueableId();
         }
 
         if (!is_array($data)) {

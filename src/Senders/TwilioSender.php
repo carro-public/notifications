@@ -38,8 +38,10 @@ class TwilioSender extends Sender
      */
     public function send($to, $message)
     {
+        $message->from($this->getFrom($message));
+        
         $payload = [
-            'from' => $this->getFrom($message),
+            'from' => $message->from,
             'body' => $message->message,
         ];
         

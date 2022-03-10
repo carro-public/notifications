@@ -24,9 +24,9 @@ abstract class Sender
     /**
      * @var \Closure Callback to determine if phone number is valid for sandbox
      */
-    protected static $validForSandboxValidator;
+    public static $validForSandboxValidator;
 
-    protected static $runningInSandboxValidator;
+    public static $runningInSandboxValidator;
 
     public function __construct($config, Dispatcher $events) {
         $this->sandbox = $this->isRunningInSandbox();
@@ -59,7 +59,7 @@ abstract class Sender
         $isValid = false;
 
         if (self::$validForSandboxValidator) {
-            $isValid = call_user_func(self::$validForSandboxValidator, $to);
+            $isValid = call_user_func(self::$validForSandboxValidator, $to, self::class);
         }
 
         if (!$isValid && $this->events) {
@@ -96,7 +96,7 @@ abstract class Sender
     protected function isRunningInSandbox()
     {
         if (!is_null(self::$runningInSandboxValidator)) {
-            call_user_func(self::$runningInSandboxValidator);
+            return call_user_func(self::$runningInSandboxValidator);
         }
 
         return false;

@@ -2,10 +2,10 @@
 
 namespace CarroPublic\Notifications\Senders;
 
-use JsonResponse;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Http;
 use CarroPublic\Notifications\Messages\Message;
+use CarroPublic\Notifications\Responses\JsonResponse;
 
 class TelerivetSender extends Sender
 {

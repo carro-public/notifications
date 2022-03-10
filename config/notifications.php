@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'sandbox' => env('NOTIFICATION_SANDBOX_ENABLE', false),
+    
     'sms' => [
         'default' => [
             'transport' => 'twilio',
