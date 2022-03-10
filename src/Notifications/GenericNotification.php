@@ -9,9 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\AnonymousNotifiable;
 use CarroPublic\Notifications\Messages\SMSMessage;
 use CarroPublic\LaravelTwilio\LaravelTwilioMessage;
+use CarroPublic\Notifications\Messages\MailMessage;
+use CarroPublic\Notifications\Messages\LineMessage;
 use CarroPublic\Notifications\Messages\WhatsAppMessage;
 
-class GenericTwilioNotification extends Notification implements ShouldQueue
+class GenericNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -55,8 +57,17 @@ class GenericTwilioNotification extends Notification implements ShouldQueue
 
         return is_array($this->channel) ? $this->channel : [$this->channel];
     }
+    
+    public function toMail($notifiable) {
+        return (new MailMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
+    }
 
     public function toSMS($notifiable)
+    {
+        return (new SMSMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
+    }
+
+    public function toSMS2Way($notifiable)
     {
         return (new SMSMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
     }
@@ -64,6 +75,10 @@ class GenericTwilioNotification extends Notification implements ShouldQueue
     public function toWhatsApp($notifiable)
     {
         return (new WhatsAppMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
+    }
+
+    public function toLine($notifiable) {
+        return (new LineMessage($this->body))->data($this->data)->from($this->from)->sender($this->sender);
     }
 
     /**
