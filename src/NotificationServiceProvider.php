@@ -16,6 +16,14 @@ class NotificationServiceProvider extends ServiceProvider
 {
     public function boot() {
         $this->loadViewsFrom(__DIR__.'/../views', 'notifications');
+
+        // Publishing is only necessary when using the CLI.
+        if ($this->app->runningInConsole()) {
+            // Publishing the configuration file.
+            $this->publishes([
+                __DIR__.'/../config/notifications.php' => config_path('notifications.php'),
+            ], 'config');
+        }
     }
     
     public function register()
