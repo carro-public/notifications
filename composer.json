@@ -1,0 +1,37 @@
+{
+    "name": "carropublic/notifications",
+    "description": "A collections of notification channels and senders",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel", "notifications"
+    ],
+    "autoload": {
+        "psr-4": {
+            "CarroPublic\\Notifications\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CarroPublic\\Notifications\\NotificationServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Pham Minh Dat",
+            "email": "dat.pham@carro.co",
+            "homepage": "https://carro.sg"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "illuminate/events": "~5|~6|~7|~8",
+        "illuminate/support": "~5|~6|~7|~8",
+        "illuminate/collections": "~5.5|~6|~7|~8",
+        "illuminate/notifications": "~5.5|~6|~7|~8",
+        "linecorp/line-bot-sdk": "^4.3",
+        "twilio/sdk": "^6"
+    }
+}
