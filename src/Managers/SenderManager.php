@@ -80,11 +80,6 @@ class SenderManager implements Factory
         return new TwilioSender($config, $this->events);
     }
 
-    protected function createTelerivetService($config)
-    {
-        return new TelerivetSender($config, $this->events);
-    }
-
     /**
      * @param $config
      * @return LineSender
@@ -97,6 +92,11 @@ class SenderManager implements Factory
     protected function createTwilioTransport($config)
     {
         return new TwilioSender($config, $this->events);
+    }
+
+    protected function createTelerivetTransport($config)
+    {
+        return new TelerivetSender($config, $this->events);
     }
 
     /**
