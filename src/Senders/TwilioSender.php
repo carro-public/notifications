@@ -50,17 +50,29 @@ class TwilioSender extends Sender
                 'sid' => 'rejected_event_dispatched'
             ], $payload), $this->config['account_sid']);
         }
-        
-        if (!empty($message->mediaUrls)) {
-            $payload['mediaUrl'] = $message->mediaUrls;
-        }
 
         $isWhatsApp = $message instanceof WhatsAppMessage;
-        
-        return $this->client->messages->create(
+
+        $messageInstance = $this->client->messages->create(
             $isWhatsApp ? "whatsapp:" . $to : $to,
             $payload
         );
+
+        # Sending MediaUrls for whatsapp
+        if (!empty($message->mediaUrls) && $isWhatsApp) {
+            foreach ($message->mediaUrls as $mediaUrl) {
+                $this->client->messages->create(
+                    "whatsapp:" . $to,
+                    [
+                        "from" => $message->from,
+                        "body" => $mediaUrl["file_name"],
+                        "mediaUrl" => $mediaUrl["url"],
+                    ],
+                );
+            }
+        }
+
+        return $messageInstance;
     }
 
     /**
