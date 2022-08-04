@@ -6,9 +6,11 @@ use Swift_Message;
 use Illuminate\Mail\Markdown;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Config\Repository;
 use CarroPublic\Notifications\Senders\Sender;
+use CarroPublic\Notifications\Senders\MailSender;
 use CarroPublic\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Mail\Factory as MailFactory;
 use CarroPublic\Notifications\Events\NotificationWasSent;
@@ -68,6 +70,14 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
             
             return;
         }
+        
+        $this->events->listen(MessageSent::class, function (MessageSent $event) {
+            $this->events->dispatch(new NotificationWasSent(
+                $event->message,
+                new MailSender([], $this->events),
+                $event->data),
+            );
+        });
         
         parent::send($notifiable, $notification);
     }
