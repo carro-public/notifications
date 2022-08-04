@@ -2,6 +2,8 @@
 
 namespace CarroPublic\Notifications\Events;
 
+use CarroPublic\Notifications\Senders\Sender;
+
 class NotificationWasSent
 {
     /**
@@ -17,14 +19,20 @@ class NotificationWasSent
     public $data;
 
     /**
+     * @var Sender
+     */
+    public $sender;
+
+    /**
      * Create a new event instance.
      *
      * @param array $data
      * @return void
      */
-    public function __construct($message, $data = [])
+    public function __construct($message, $sender, $data = [])
     {
         $this->message = $message;
+        $this->sender = $sender;
         $this->data = $data;
     }
 }

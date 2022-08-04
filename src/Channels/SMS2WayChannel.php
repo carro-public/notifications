@@ -45,11 +45,12 @@ class SMS2WayChannel
             }
         }
 
-        $messageInstance = $this->manager->sender('sms2way', $message->sender ?? null)->send($to, $message);
+        $sender = $this->manager->sender('sms2way', $message->sender ?? null);
+        $messageInstance = $sender->send($to, $message);
 
         if ($this->events) {
             $this->events->dispatch(
-                new NotificationWasSent($messageInstance, $message->data)
+                new NotificationWasSent($messageInstance, $sender, $message->data)
             );
         }
     }

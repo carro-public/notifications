@@ -42,10 +42,11 @@ class LineChannel
             }
         }
 
-        $response = $this->manager->sender('line')->send($to, $message);
+        $sender = $this->manager->sender('line');
+        $response = $sender->send($to, $message);
 
         if ($this->events) {
-            $this->events->dispatch(new NotificationWasSent($response, $message->data));
+            $this->events->dispatch(new NotificationWasSent($response, $sender, $message->data));
         }
 
         return $response;
