@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use CarroPublic\Notifications\Responses\JsonResponse;
+use LINE\LINEBot\Exception\InvalidEventRequestException;
 
 class LineSender extends Sender
 {
@@ -33,9 +34,17 @@ class LineSender extends Sender
         $text = new TextMessageBuilder($message->message);
 
         $response = $this->client->pushMessage($to, $text, true);
+        
+        if ($response->getHTTPStatus() !== 200) {
+            throw new InvalidEventRequestException($response->getRawBody());
+        }
 
         foreach ($message->attachments as $attachment) {
-            $this->client->pushMessage($to, $attachment, true);
+            $response = $this->client->pushMessage($to, $attachment, true);
+
+            if ($response->getHTTPStatus() !== 200) {
+                throw new InvalidEventRequestException($response->getRawBody());
+            }
         }
 
         return new JsonResponse(json_encode([
