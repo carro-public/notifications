@@ -42,7 +42,7 @@ class LineChannel
             }
         }
 
-        $sender = $this->manager->sender('line');
+        $sender = $this->manager->sender('line', $message->sender ?? null);
         $response = $sender->send($to, $message);
 
         if ($this->events) {

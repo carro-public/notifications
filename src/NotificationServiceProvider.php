@@ -28,8 +28,6 @@ class NotificationServiceProvider extends ServiceProvider
     
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/notifications.php', 'notifications');
-
         Notification::resolved(function (ChannelManager $service) {
             $service->extend('mail', function ($app) {
                 return $app->make(MailChannel::class);
