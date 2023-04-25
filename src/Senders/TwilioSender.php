@@ -40,7 +40,7 @@ class TwilioSender extends Sender
     public function send($to, $message)
     {
         $message->from($this->getFrom($message));
-        
+
         $payloads = $this->generatePayloads($message);
 
         return array_map(function ($payload) use ($to, $message) {
@@ -96,17 +96,16 @@ class TwilioSender extends Sender
 
         if ($message instanceof WhatsAppMessage && !empty($message->mediaUrls)) {
             # Init media array for message instances
-            $payloads["media"] = [];
             foreach ($message->mediaUrls as $mediaUrl) {
-                $key = data_get($mediaUrl, "id", "url");
-                $payloads["media"][$key] = [
+                $key = data_get($mediaUrl, "id", data_get($mediaUrl, "url"));
+                $payloads["media-{$key}"] = [
                     "from" => $message->from,
                     "body" => $mediaUrl["file_name"],
                     "mediaUrl" => $mediaUrl["url"],
                 ];
             }
         }
-        
+
         return $payloads;
     }
 
