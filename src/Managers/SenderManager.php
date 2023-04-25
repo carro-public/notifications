@@ -21,11 +21,14 @@ class SenderManager implements Factory
     protected $config;
     
     protected $events;
+    
+    protected $logger;
 
     public function __construct($app)
     {
         $this->config = $app['config'];
         $this->events = $app['events'];
+        $this->logger = $app['log'];
     }
 
     /**
@@ -77,7 +80,7 @@ class SenderManager implements Factory
 
     protected function createTwilioService($config)
     {
-        return new TwilioSender($config, $this->events);
+        return new TwilioSender($config, $this->events, $this->logger);
     }
 
     /**
@@ -86,17 +89,17 @@ class SenderManager implements Factory
      */
     protected function createLineService($config)
     {
-        return new LineSender($config, $this->events);
+        return new LineSender($config, $this->events, $this->logger);
     }
 
     protected function createTwilioTransport($config)
     {
-        return new TwilioSender($config, $this->events);
+        return new TwilioSender($config, $this->events, $this->logger);
     }
 
     protected function createTelerivetTransport($config)
     {
-        return new TelerivetSender($config, $this->events);
+        return new TelerivetSender($config, $this->events, $this->logger);
     }
 
     /**

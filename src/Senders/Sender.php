@@ -2,6 +2,7 @@
 
 namespace CarroPublic\Notifications\Senders;
 
+use Psr\Log\LoggerInterface;
 use Illuminate\Events\Dispatcher;
 use CarroPublic\Notifications\Messages\Message;
 use CarroPublic\Notifications\Events\MessageRejectedForSandbox;
@@ -22,16 +23,22 @@ abstract class Sender
     protected $events;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var \Closure Callback to determine if phone number is valid for sandbox
      */
     public static $validForSandboxValidator;
 
     public static $runningInSandboxValidator;
 
-    public function __construct($config, Dispatcher $events) {
+    public function __construct($config, Dispatcher $events, LoggerInterface $logger) {
         $this->sandbox = $this->isRunningInSandbox();
         $this->config = $config;
         $this->events = $events;
+        $this->logger = $logger;
     }
     
     /**
