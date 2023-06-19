@@ -23,9 +23,9 @@ class TwilioSender extends Sender
     /**
      * Initialize Twilio account sid and auth token
      */
-    public function __construct($config, Dispatcher $events)
+    public function __construct($config, Dispatcher $events, $logger)
     {
-        parent::__construct($config, $events);
+        parent::__construct($config, $events, $logger);
         if (empty($config['account_sid']) || empty($config['auth_token'])) {
             throw new InvalidArgumentException('Missing account_sid or auth_token for TwilioSender in config/notifications.php');
         }
@@ -35,16 +35,28 @@ class TwilioSender extends Sender
 
     /**
      * @param $to
+     * @return MessageInstance[]
      */
     public function send($to, $message)
     {
         $message->from($this->getFrom($message));
-        
-        $payload = [
-            'from' => $message->from,
-            'body' => $message->message,
-        ];
-        
+
+        $payloads = $this->generatePayloads($message);
+
+        return array_map(function ($payload) use ($to, $message) {
+            return $this->sendPayload($payload, $to, $message);
+        }, $payloads);
+    }
+
+    /**
+     * Send payload to twilio and receive message instance
+     * @param $payload
+     * @param $to
+     * @param Message $message
+     * @return MessageInstance|MessageInstance
+     */
+    protected function sendPayload($payload, $to, Message $message)
+    {
         if (!parent::send($to, $message)) {
             return new MessageInstance(new V2010(new Api($this->client)), array_merge([
                 'sid' => 'rejected_event_dispatched'
@@ -53,26 +65,48 @@ class TwilioSender extends Sender
 
         $isWhatsApp = $message instanceof WhatsAppMessage;
 
-        $messageInstance = $this->client->messages->create(
-            $isWhatsApp ? "whatsapp:" . $to : $to,
-            $payload
-        );
+        try {
+            return $this->client->messages->create(
+                $isWhatsApp ? "whatsapp:" . $to : $to,
+                $payload
+            );
+        } catch (\Exception $exception) {
+            $this->logger->error("Failed To Create Twilio Message", [
+                'payload' => $payload,
+                'exception' => $exception->getMessage(),
+            ]);
+            return null;
+        }
+    }
 
-        # Sending MediaUrls for whatsapp
-        if (!empty($message->mediaUrls) && $isWhatsApp) {
+    /**
+     * Generate all Twilio Payloads to call API
+     * @param Message $message
+     * @return array
+     */
+    protected function generatePayloads(Message $message): array
+    {
+        $payloads = [];
+        if (!empty($message->message)) {
+            $payloads['text'] = [
+                'from' => $message->from,
+                'body' => $message->message,
+            ];
+        }
+
+        if ($message instanceof WhatsAppMessage && !empty($message->mediaUrls)) {
+            # Init media array for message instances
             foreach ($message->mediaUrls as $mediaUrl) {
-                $this->client->messages->create(
-                    "whatsapp:" . $to,
-                    [
-                        "from" => $message->from,
-                        "body" => $mediaUrl["file_name"],
-                        "mediaUrl" => $mediaUrl["url"],
-                    ],
-                );
+                $key = data_get($mediaUrl, "id", data_get($mediaUrl, "url"));
+                $payloads["media-{$key}"] = [
+                    "from" => $message->from,
+                    "body" => $mediaUrl["file_name"],
+                    "mediaUrl" => $mediaUrl["url"],
+                ];
             }
         }
 
-        return $messageInstance;
+        return $payloads;
     }
 
     /**
