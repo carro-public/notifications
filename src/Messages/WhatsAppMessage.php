@@ -13,6 +13,10 @@ class WhatsAppMessage extends Message
      * @var bool
      */
     public $isWhatsApp;
+    
+    public $contentSid = null;
+    
+    public $contentVariables = [];
 
     /**
      * @param mixed $mediaUrl
@@ -20,6 +24,28 @@ class WhatsAppMessage extends Message
     public function mediaUrls($mediaUrls)
     {
         $this->mediaUrls = $mediaUrls;
+
+        return $this;
+    }
+
+    /**
+     * @param $contentSid
+     * @return $this
+     */
+    public function contentSid($contentSid)
+    {
+        $this->contentSid = $contentSid;
+        
+        return $this;
+    }
+
+    /**
+     * @param $contentVariables
+     * @return $this
+     */
+    public function contentVariables($contentVariables)
+    {
+        $this->contentVariables = $contentVariables;
 
         return $this;
     }

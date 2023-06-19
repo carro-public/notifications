@@ -81,7 +81,7 @@ class TwilioSender extends Sender
 
     /**
      * Generate all Twilio Payloads to call API
-     * @param Message $message
+     * @param WhatsAppMessage $message
      * @return array
      */
     protected function generatePayloads(Message $message): array
@@ -91,6 +91,13 @@ class TwilioSender extends Sender
             $payloads['text'] = [
                 'from' => $message->from,
                 'body' => $message->message,
+            ];
+        }
+        
+        if (!is_null($message->contentSid)) {
+            $payloads['text'] = [
+                'contentSid' => $message->contentSid,
+                'contentVariables' => $message->contentVariables,
             ];
         }
 
