@@ -97,7 +97,7 @@ class TwilioSender extends Sender
         if (!is_null($message->contentSid)) {
             $payloads['text'] = [
                 'contentSid' => $message->contentSid,
-                'contentVariables' => $message->contentVariables,
+                'contentVariables' => json_encode($message->contentVariables),
             ];
         }
 
