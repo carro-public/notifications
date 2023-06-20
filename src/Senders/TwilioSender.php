@@ -88,28 +88,21 @@ class TwilioSender extends Sender
     {
         $payloads = [];
         if (!empty($message->message)) {
-            $payloads['text'] = [
+            $payloads['text'] = array_merge([
                 'from' => $message->from,
                 'body' => $message->message,
-            ];
+            ], $message->extraPayload);
         }
         
-        if (!is_null($message->contentSid)) {
-            $payloads['text'] = [
-                'contentSid' => $message->contentSid,
-                'contentVariables' => json_encode($message->contentVariables),
-            ];
-        }
-
         if ($message instanceof WhatsAppMessage && !empty($message->mediaUrls)) {
             # Init media array for message instances
             foreach ($message->mediaUrls as $mediaUrl) {
                 $key = data_get($mediaUrl, "id", data_get($mediaUrl, "url"));
-                $payloads["media-{$key}"] = [
+                $payloads["media-{$key}"] = array_merge([
                     "from" => $message->from,
                     "body" => $mediaUrl["file_name"],
                     "mediaUrl" => $mediaUrl["url"],
-                ];
+                ], $message->extraPayload);
             }
         }
 
