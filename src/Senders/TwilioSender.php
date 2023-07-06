@@ -81,28 +81,28 @@ class TwilioSender extends Sender
 
     /**
      * Generate all Twilio Payloads to call API
-     * @param Message $message
+     * @param WhatsAppMessage $message
      * @return array
      */
     protected function generatePayloads(Message $message): array
     {
         $payloads = [];
         if (!empty($message->message)) {
-            $payloads['text'] = [
+            $payloads['text'] = array_merge([
                 'from' => $message->from,
                 'body' => $message->message,
-            ];
+            ], $message->extraPayload);
         }
-
+        
         if ($message instanceof WhatsAppMessage && !empty($message->mediaUrls)) {
             # Init media array for message instances
             foreach ($message->mediaUrls as $mediaUrl) {
                 $key = data_get($mediaUrl, "id", data_get($mediaUrl, "url"));
-                $payloads["media-{$key}"] = [
+                $payloads["media-{$key}"] = array_merge([
                     "from" => $message->from,
                     "body" => $mediaUrl["file_name"],
                     "mediaUrl" => $mediaUrl["url"],
-                ];
+                ], $message->extraPayload);
             }
         }
 

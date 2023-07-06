@@ -13,6 +13,8 @@ class WhatsAppMessage extends Message
      * @var bool
      */
     public $isWhatsApp;
+    
+    public $extraPayload = [];
 
     /**
      * @param mixed $mediaUrl
@@ -21,6 +23,13 @@ class WhatsAppMessage extends Message
     {
         $this->mediaUrls = $mediaUrls;
 
+        return $this;
+    }
+    
+    public function extraPayload($extraPayload)
+    {
+        $this->extraPayload = $extraPayload;
+        
         return $this;
     }
 
