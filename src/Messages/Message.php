@@ -14,6 +14,8 @@ abstract class Message
 
     public $data;
 
+    public $extraPayload = [];
+
     public function __construct($message)
     {
         $this->message = $message;
@@ -56,6 +58,13 @@ abstract class Message
     public function sender($sender)
     {
         $this->sender = $sender;
+
+        return $this;
+    }
+    
+    public function extraPayload($extraPayload)
+    {
+        $this->extraPayload = $extraPayload;
 
         return $this;
     }
