@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5b60197bbfd3d832d50164ed733e356",
+    "content-hash": "9aed4d919858f12fe16e45343e579ddc",
     "packages": [
         {
             "name": "brick/math",
@@ -3891,16 +3891,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "6.35.0",
+            "version": "7.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "9cfb888bdb2555365ef0b48a81c140394e53ab83"
+                "url": "git@github.com:twilio/twilio-php.git",
+                "reference": "4390f89081a1e0bf680d55f2f916f2a89dc6ae4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/9cfb888bdb2555365ef0b48a81c140394e53ab83",
-                "reference": "9cfb888bdb2555365ef0b48a81c140394e53ab83",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/4390f89081a1e0bf680d55f2f916f2a89dc6ae4e",
+                "reference": "4390f89081a1e0bf680d55f2f916f2a89dc6ae4e",
                 "shasum": ""
             },
             "require": {
@@ -3908,7 +3908,7 @@
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "^6.3 || ^7.0",
-                "phpunit/phpunit": ">=7.0"
+                "phpunit/phpunit": ">=7.0 < 10"
             },
             "suggest": {
                 "guzzlehttp/guzzle": "An HTTP client to execute the API requests"
@@ -3936,11 +3936,7 @@
                 "sms",
                 "twilio"
             ],
-            "support": {
-                "issues": "https://github.com/twilio/twilio-php/issues",
-                "source": "https://github.com/twilio/twilio-php/tree/6.35.0"
-            },
-            "time": "2022-02-23T21:11:20+00:00"
+            "time": "2023-07-27T10:01:20+00:00"
         },
         {
             "name": "voku/portable-ascii",

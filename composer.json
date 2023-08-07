@@ -32,6 +32,6 @@
         "illuminate/collections": "~5.5|~6|~7|~8|~9|~10",
         "illuminate/notifications": "~5.5|~6|~7|~8|~9|~10",
         "linecorp/line-bot-sdk": "^7.6",
-        "twilio/sdk": "^6"
+        "twilio/sdk": "^7.3"
     }
 }
