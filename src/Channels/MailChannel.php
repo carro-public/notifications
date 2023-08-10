@@ -76,7 +76,7 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
         $this->events->listen(MessageSent::class, function (MessageSent $event) {
             $this->events->dispatch(new NotificationWasSent(
                 $event->message,
-                new MailSender([], $this->events, app('logger')),
+                new MailSender([], $this->events, app('log')),
                 $event->data),
             );
         });
