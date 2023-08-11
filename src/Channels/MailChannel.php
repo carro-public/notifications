@@ -2,11 +2,13 @@
 
 namespace CarroPublic\Notifications\Channels;
 
-use Swift_Message;
+use Illuminate\Mail\Message;
 use Illuminate\Mail\Markdown;
 use Illuminate\Events\Dispatcher;
+use Symfony\Component\Mime\Email;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Mail\Events\MessageSent;
+use Symfony\Component\Mime\Part\TextPart;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Config\Repository;
 use CarroPublic\Notifications\Senders\Sender;
@@ -65,7 +67,7 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
                 ->cc($mailMessage->cc);
             $this->events->dispatch(new MessageRejectedForSandbox($to, $message));
             $this->events->dispatch(new NotificationWasSent(
-                new Swift_Message($mailMessage->subject, $content), $mailMessage->viewData
+                new Message((new Email())->subject($mailMessage->subject)->setBody(new TextPart($content))), $mailMessage->viewData
             ));
             
             return;
@@ -74,7 +76,7 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
         $this->events->listen(MessageSent::class, function (MessageSent $event) {
             $this->events->dispatch(new NotificationWasSent(
                 $event->message,
-                new MailSender([], $this->events),
+                new MailSender([], $this->events, app('log')),
                 $event->data),
             );
         });
