@@ -65,18 +65,10 @@ class TwilioSender extends Sender
 
         $isWhatsApp = $message instanceof WhatsAppMessage;
 
-        try {
-            return $this->client->messages->create(
-                $isWhatsApp ? "whatsapp:" . $to : $to,
-                $payload
-            );
-        } catch (\Exception $exception) {
-            $this->logger->error("Failed To Create Twilio Message", [
-                'payload' => $payload,
-                'exception' => $exception->getMessage(),
-            ]);
-            return null;
-        }
+        return $this->client->messages->create(
+            $isWhatsApp ? "whatsapp:" . $to : $to,
+            $payload
+        );
     }
 
     /**
