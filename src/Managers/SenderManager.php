@@ -43,6 +43,31 @@ class SenderManager implements Factory
     }
 
     /**
+     * @param $service
+     * @param $name
+     * @param $instance
+     * @return void
+     */
+    public function registerSender($service, $name, $instance)
+    {
+        $this->senders[$service][$name] = $instance instanceof \Closure ? $instance() : $instance;
+    }
+
+    /**
+     * Register customer Sender for a service's sender
+     * @param $service
+     * @param $name
+     * @param $instance
+     * @return void
+     */
+    public static function extendSender($service, $name, $instance)
+    {
+        /** @var SenderManager $manager */
+        $manager = app(SenderManager::class);
+        $manager->registerSender($service, $name, $instance);
+    }
+
+    /**
      * Resolve the given sender.
      *
      * @param string $name
