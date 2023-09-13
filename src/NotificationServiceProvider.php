@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
 use CarroPublic\Notifications\Channels\SMSChannel;
-use CarroPublic\Notifications\Channels\MailChannel;
 use CarroPublic\Notifications\Channels\LineChannel;
 use CarroPublic\Notifications\Managers\SenderManager;
 use CarroPublic\Notifications\Channels\SMS2WayChannel;
@@ -29,9 +28,6 @@ class NotificationServiceProvider extends ServiceProvider
     public function register()
     {
         Notification::resolved(function (ChannelManager $service) {
-            $service->extend('mail', function ($app) {
-                return $app->make(MailChannel::class);
-            });
             $service->extend('sms', function ($app) {
                 return $app->make(SMSChannel::class);
             });
