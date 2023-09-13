@@ -47,8 +47,8 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
             }
         }
         
-        $sandbox = call_user_func(Sender::$runningInSandboxValidator);
-        $valid = call_user_func(Sender::$validForSandboxValidator, $to, MailChannel::class);
+        $sandbox = !empty(Sender::$runningInSandboxValidator) ? call_user_func(Sender::$runningInSandboxValidator) : false;
+        $valid = !empty(Sender::$validForSandboxValidator) ? call_user_func(Sender::$validForSandboxValidator, $to, MailChannel::class) : true;
         
         if ($sandbox && !$valid && $this->events) {
             $mailMessage = $notification->toMail($notifiable);
