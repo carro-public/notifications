@@ -25,6 +25,11 @@ class InfobipSender extends Sender
     private $projectId;
 
     /**
+     * @var string $from
+     */
+    private $from;
+
+    /**
      * Setting Telerivet API key and project id
      */
     public function __construct($config, $events, $logger)
@@ -37,6 +42,7 @@ class InfobipSender extends Sender
         $this->baseUrl = $config['base_url'];
         $this->apiKey = $config['api_key'];
         $this->projectId = $config['project_id'];
+        $this->from = $config['from'];
     }
 
     public function send($to, Message $message)
@@ -55,7 +61,7 @@ class InfobipSender extends Sender
                             'destinations' => [
                                 ['to' => $to],
                             ],
-                            'from' => 'ServiceSMS',
+                            'from' => $this->from,
                             'text' => $message->message,
                         ]
                     ]
