@@ -2,7 +2,7 @@
 
 return [
     'sandbox' => env('NOTIFICATION_SANDBOX_ENABLE', false),
-    
+
     'sms' => [
         'default' => [
             'transport' => 'twilio',
@@ -11,7 +11,13 @@ return [
             'from' => env('TWILIO_FROM'),
         ],
         'senders' => [
-
+            'infobip' => [
+                'transport' => 'infobip',
+                'base_url' => env('INFOBIP_BASE_URL'),
+                'api_key' => env('INFOBIP_API_KEY'),
+                'from' => env('INFOBIP_FROM'),
+                'project_id' => env('INFOBIP_PROJECT_ID', ''),
+            ]
         ]
     ],
 
@@ -53,5 +59,5 @@ return [
 
         ]
     ],
-    
+
 ];
