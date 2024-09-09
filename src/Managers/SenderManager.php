@@ -142,7 +142,7 @@ class SenderManager implements Factory
     protected function getConfig($service, $name = null)
     {
         if (empty($name)) {
-            return $this->config->get("notifications.{$service}.default");
+            $name = $this->config->get("notifications.{$service}.default");
         }
 
         return $this->config->get("notifications.{$service}.senders.{$name}");
