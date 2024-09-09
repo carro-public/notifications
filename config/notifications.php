@@ -18,47 +18,48 @@ return [
                 'api_key' => env('INFOBIP_API_KEY'),
                 'from' => env('INFOBIP_FROM'),
                 'project_id' => env('INFOBIP_PROJECT_ID', ''),
-            ]
-        ]
+            ],
+        ],
     ],
 
     'sms2way' => [
-        'default' => [
-            'transport' => 'twilio',
-            'account_sid' => env('TWILIO_ACCOUNT_SID'),
-            'auth_token' => env('TWILIO_AUTH_TOKEN'),
-            'from' => env('TWILIO_FROM'),
-        ],
+        'default' => env('NOTIFICATION_DEFAULT_SMS2WAY_SENDER', 'twilio'),
         'senders' => [
+            'twilio' => [
+                'transport' => 'twilio',
+                'account_sid' => env('TWILIO_ACCOUNT_SID'),
+                'auth_token' => env('TWILIO_AUTH_TOKEN'),
+                'from' => env('TWILIO_FROM'),
+            ],
             'telerivet' => [
                 'transport' => 'telerivet',
                 'api_key' => env('TELERIVET_API_KEY', ''),
                 'project_id' => env('TELERIVET_PROJECT_ID', ''),
                 'number' => env('TELERIVET_NUMBER', ''),
-            ]
-        ]
+            ],
+        ],
     ],
 
     'whatsapp' => [
-        'default' => [
-            'transport' => 'twilio',
-            'account_sid' => env('TWILIO_ACCOUNT_SID'),
-            'auth_token' => env('TWILIO_AUTH_TOKEN'),
-            'from' => env('TWILIO_WHATSAPP_FROM'),
-        ],
+        'default' => env('NOTIFICATION_DEFAULT_WHATSAPP_SENDER', 'twilio'),
         'senders' => [
-
-        ]
+            'twilio' => [
+                'transport' => 'twilio',
+                'account_sid' => env('TWILIO_ACCOUNT_SID'),
+                'auth_token' => env('TWILIO_AUTH_TOKEN'),
+                'from' => env('TWILIO_WHATSAPP_FROM'),
+            ],
+        ],
     ],
 
     'line' => [
-        'default' => [
-            'token' => env('LINE_ACCESS_TOKEN'),
-            'secret' => env('LINE_CHANNEL_SECRET')
-        ],
+        'default' => env('NOTIFICATION_DEFAULT_LINE_SENDER', 'line'),
         'senders' => [
-
-        ]
+            'line' => [
+                'token' => env('LINE_ACCESS_TOKEN'),
+                'secret' => env('LINE_CHANNEL_SECRET'),
+            ],
+        ],
     ],
 
 ];
