@@ -4,13 +4,14 @@ return [
     'sandbox' => env('NOTIFICATION_SANDBOX_ENABLE', false),
 
     'sms' => [
-        'default' => [
-            'transport' => 'twilio',
-            'account_sid' => env('TWILIO_ACCOUNT_SID'),
-            'auth_token' => env('TWILIO_AUTH_TOKEN'),
-            'from' => env('TWILIO_FROM'),
-        ],
+        'default' => env('NOTIFICATION_DEFAULT_SMS_SENDER', 'infobip'),
         'senders' => [
+            'twilio' => [
+                'transport' => 'twilio',
+                'account_sid' => env('TWILIO_ACCOUNT_SID'),
+                'auth_token' => env('TWILIO_AUTH_TOKEN'),
+                'from' => env('TWILIO_FROM'),
+            ],
             'infobip' => [
                 'transport' => 'infobip',
                 'base_url' => env('INFOBIP_BASE_URL'),
