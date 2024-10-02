@@ -4,6 +4,8 @@ namespace CarroPublic\Notifications\Messages;
 
 class MailMessage extends Message
 {
+    const TYPE = 'mail';
+    
     public $subject;
     
     public $cc;

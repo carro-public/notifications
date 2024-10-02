@@ -4,6 +4,8 @@ namespace CarroPublic\Notifications\Messages;
 
 class LineMessage extends Message
 {
+    const TYPE = 'line';
+    
     /**
      * @var
      */

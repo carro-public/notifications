@@ -4,6 +4,8 @@ namespace CarroPublic\Notifications\Messages;
 
 class WhatsAppMessage extends Message
 {
+    const TYPE = 'whatsapp';
+    
     /**
      * @var
      */

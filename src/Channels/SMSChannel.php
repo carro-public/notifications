@@ -50,7 +50,7 @@ class SMSChannel
 
         if ($this->events) {
             $this->events->dispatch(
-                new NotificationWasSent($messageInstance, $sender, $message->data)
+                new NotificationWasSent($messageInstance, $sender, $message)
             );
         }
     }

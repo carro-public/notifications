@@ -1,6 +1,28 @@
 <?php
 
+use CarroPublic\Notifications\Messages\SMSMessage;
+use CarroPublic\Notifications\Messages\LineMessage;
+use CarroPublic\Notifications\Messages\MailMessage;
+use CarroPublic\Notifications\Models\NotificationModel;
+use CarroPublic\Notifications\Messages\WhatsAppMessage;
+use CarroPublic\Notifications\Messages\TelerivetMessage;
+use CarroPublic\Notifications\Models\NullNotificationModelProvider;
+
 return [
+    'model' => [
+        'provider' => NullNotificationModelProvider::class,
+        
+        'model' => NotificationModel::class,
+        
+        'supported_messages' => [
+            LineMessage::class,
+            MailMessage::class,
+            SMSMessage::class,
+            TelerivetMessage::class,
+            WhatsAppMessage::class,
+        ]
+    ],
+    
     'sandbox' => env('NOTIFICATION_SANDBOX_ENABLE', false),
 
     'sms' => [
@@ -61,5 +83,4 @@ return [
             ],
         ],
     ],
-
 ];

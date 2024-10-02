@@ -4,6 +4,8 @@ namespace CarroPublic\Notifications\Messages;
 
 class SMSMessage extends Message
 {
+    const TYPE = 'sms';
+    
     /**
      * Convert object to string for printing
      * @return false|string

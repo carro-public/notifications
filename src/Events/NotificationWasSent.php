@@ -3,6 +3,7 @@
 namespace CarroPublic\Notifications\Events;
 
 use CarroPublic\Notifications\Senders\Sender;
+use CarroPublic\Notifications\Messages\Message;
 
 class NotificationWasSent
 {
@@ -14,9 +15,9 @@ class NotificationWasSent
     /**
      * The message data.
      *
-     * @var array
+     * @var Message
      */
-    public $data;
+    public Message $originalMessage;
 
     /**
      * @var Sender
@@ -29,10 +30,10 @@ class NotificationWasSent
      * @param array $data
      * @return void
      */
-    public function __construct($message, $sender, $data = [])
+    public function __construct($message, $sender, $originalMessage)
     {
         $this->message = $message;
         $this->sender = $sender;
-        $this->data = $data;
+        $this->originalMessage = $originalMessage;
     }
 }

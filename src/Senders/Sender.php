@@ -2,6 +2,7 @@
 
 namespace CarroPublic\Notifications\Senders;
 
+use Illuminate\Support\Str;
 use Psr\Log\LoggerInterface;
 use Illuminate\Events\Dispatcher;
 use CarroPublic\Notifications\Messages\Message;
@@ -54,6 +55,14 @@ abstract class Sender
         }
         
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSenderName()
+    {
+        return str_replace('Sender', '', Str::camel(Str::afterLast(get_class($this), '\\')));
     }
 
     /**

@@ -67,7 +67,9 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
                 ->cc($mailMessage->cc);
             $this->events->dispatch(new MessageRejectedForSandbox($to, $message));
             $this->events->dispatch(new NotificationWasSent(
-                new Message((new Email())->subject($mailMessage->subject)->setBody(new TextPart($content))), $mailMessage->viewData
+                new Message((new Email())->subject($mailMessage->subject)->setBody(new TextPart($content))),
+                $mailMessage,
+                $message,
             ));
             
             return;
@@ -77,8 +79,8 @@ class MailChannel extends \Illuminate\Notifications\Channels\MailChannel
             $this->events->dispatch(new NotificationWasSent(
                 $event->message,
                 new MailSender([], $this->events, app('log')),
-                $event->data),
-            );
+                $event
+            ));
         });
         
         parent::send($notifiable, $notification);

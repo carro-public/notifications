@@ -49,7 +49,7 @@ class WebhookChannel
 
         if ($this->events) {
             $this->events->dispatch(
-                new NotificationWasSent($response, $sender, $message->data)
+                new NotificationWasSent($response, $sender, $message)
             );
         }
     }

@@ -46,7 +46,7 @@ class LineChannel
         $response = $sender->send($to, $message);
 
         if ($this->events) {
-            $this->events->dispatch(new NotificationWasSent($response, $sender, $message->data));
+            $this->events->dispatch(new NotificationWasSent($response, $sender, $message));
         }
 
         return $response;

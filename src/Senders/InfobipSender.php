@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\Http;
 use CarroPublic\Notifications\Messages\Message;
 use CarroPublic\Notifications\Responses\JsonResponse;
+use CarroPublic\Notifications\Responses\InfobipResponse;
 
 class InfobipSender extends Sender
 {
@@ -56,18 +57,25 @@ class InfobipSender extends Sender
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->post("{$this->baseUrl}/sms/{$this->projectId}/text/advanced", [
-                    'messages' => [
+            'messages' => [
+                [
+                    'destinations' => [
                         [
-                            'destinations' => [
-                                ['to' => $to],
-                            ],
-                            'from' => $this->from,
-                            'text' => $message->message,
-                        ]
-                    ]
-                ]);
+                            'to' => $to
+                        ],
+                    ],
+                    'from' => $this->from,
+                    'text' => $message->message,
+                ]
+            ]
+        ]);
 
 
-        return new JsonResponse($response->body());
+        return new InfobipResponse($response->body());
+    }
+    
+    public function getFrom()
+    {
+        return $this->from;
     }
 }

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\Http;
 use CarroPublic\Notifications\Messages\Message;
 use CarroPublic\Notifications\Responses\JsonResponse;
+use CarroPublic\Notifications\Responses\TelerivetResponse;
 
 class TelerivetSender extends Sender
 {
@@ -45,6 +46,6 @@ class TelerivetSender extends Sender
             'to_number' => $to,
         ]);
 
-        return new JsonResponse($response->body());
+        return new TelerivetResponse($response->body());
     }
 }

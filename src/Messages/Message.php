@@ -14,6 +14,8 @@ abstract class Message
 
     public $data;
 
+    public $shouldPersist = false;
+
     public $extraPayload = [];
 
     public function __construct($message)
@@ -61,7 +63,18 @@ abstract class Message
 
         return $this;
     }
-    
+
+    /**
+     * @param $sender
+     * @return self
+     */
+    public function shouldPersist($shouldPersist)
+    {
+        $this->shouldPersist = $shouldPersist;
+
+        return $this;
+    }
+
     public function extraPayload($extraPayload)
     {
         $this->extraPayload = $extraPayload;
@@ -76,6 +89,16 @@ abstract class Message
     public function toString()
     {
         return '';
+    }
+
+    public function getType()
+    {
+        return static::TYPE;
+    }
+
+    public function getMessageId()
+    {
+        return null;
     }
 
     /**

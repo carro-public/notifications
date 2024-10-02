@@ -4,6 +4,8 @@ namespace CarroPublic\Notifications\Messages;
 
 class WebhookMessage extends Message
 {
+    const TYPE = 'webhook';
+    
     public $method = 'POST';
     
     public $payload = [];
