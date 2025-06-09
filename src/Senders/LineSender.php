@@ -56,6 +56,8 @@ class LineSender extends Sender
             
             throw new \Exception($message);
         }
+        
+        return $responses->toArray();
     }
 
     /**
