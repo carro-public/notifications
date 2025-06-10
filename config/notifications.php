@@ -19,6 +19,12 @@ return [
                 'from' => env('INFOBIP_FROM'),
                 'project_id' => env('INFOBIP_PROJECT_ID', ''),
             ],
+            'byteplus' => [
+                'transport' => 'byteplus',
+                'base_url' => env('BYTEPLUS_BASE_URL', 'https://sms.byteplusapi.com'),
+                'username' => env('BYTEPLUS_USERNAME'),
+                'password' => env('BYTEPLUS_PASSWORD'),
+            ],
         ],
     ],
 
