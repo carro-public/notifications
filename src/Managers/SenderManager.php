@@ -8,6 +8,7 @@ use CarroPublic\Notifications\Senders\Sender;
 use CarroPublic\Notifications\Senders\LineSender;
 use CarroPublic\Notifications\Senders\TwilioSender;
 use CarroPublic\Notifications\Senders\InfobipSender;
+use CarroPublic\Notifications\Senders\ByteplusSender;
 use CarroPublic\Notifications\Senders\TelerivetSender;
 
 class SenderManager implements Factory
@@ -131,6 +132,11 @@ class SenderManager implements Factory
     protected function createInfobipTransport($config)
     {
         return new InfobipSender($config, $this->events, $this->logger);
+    }
+
+    protected function createByteplusTransport($config)
+    {
+        return new ByteplusSender($config, $this->events, $this->logger);
     }
 
     /**
