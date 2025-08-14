@@ -26,8 +26,14 @@ class TwilioSender extends Sender
     public function __construct($config, Dispatcher $events, $logger)
     {
         parent::__construct($config, $events, $logger);
-        if (empty($config['account_sid']) || empty($config['auth_token'])) {
-            throw new InvalidArgumentException('Missing account_sid or auth_token for TwilioSender in config/notifications.php');
+
+        $hasClassicAuth = !empty($config['account_sid']) && !empty($config['auth_token']);
+        $hasApiKeyAuth  = !empty($config['account_sid']) && !empty($config['api_key']) && !empty($config['api_secret']);
+
+        if (!$hasClassicAuth && !$hasApiKeyAuth) {
+            throw new InvalidArgumentException(
+                'Invalid TwilioSender config: Provide either account_sid + auth_token, or account_sid + api_key + api_secret in config/notifications.php'
+            );
         }
 
         if (isset($config['api_key'])) {
