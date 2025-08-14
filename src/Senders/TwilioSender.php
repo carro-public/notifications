@@ -30,7 +30,11 @@ class TwilioSender extends Sender
             throw new InvalidArgumentException('Missing account_sid or auth_token for TwilioSender in config/notifications.php');
         }
 
-        $this->client = new Client($config['account_sid'], $config['auth_token']);
+        if (isset($config['api_key'])) {
+            $this->client = new Client($config['api_key'], $config['api_secret'], $config['account_sid']);
+        } else {
+            $this->client = new Client($config['account_sid'], $config['auth_token']);
+        }
     }
 
     /**
