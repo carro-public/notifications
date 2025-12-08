@@ -51,23 +51,53 @@ class InfobipSender extends Sender
             return json_encode([]);
         }
 
-        $response = Http::withHeaders([
-            'Authorization' => "App {$this->apiKey}",
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ])->post("{$this->baseUrl}/sms/{$this->projectId}/text/advanced", [
-                    'messages' => [
-                        [
-                            'destinations' => [
-                                ['to' => $to],
-                            ],
-                            'from' => $this->from,
-                            'text' => $message->message,
-                        ]
+        if ($this->projectId == 2) {
+            $response = Http::withHeaders([
+                'Authorization' => "App {$this->apiKey}",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->post("{$this->baseUrl}/sms/2/text/advanced", [
+                'messages' => [
+                    [
+                        'destinations' => [
+                            ['to' => $to],
+                        ],
+                        'from' => $this->from,
+                        'text' => $message->message,
+                        "notifyUrl" => $message->extraPayload['notifyUrl'] ?? null,
+                        "intermediateReport" => true,
                     ]
-                ]);
+                ]
+            ]);
 
+            return new JsonResponse($response->body());
+        }
 
-        return new JsonResponse($response->body());
+        if ($this->projectId == 3) {
+            $response = Http::withHeaders([
+                'Authorization' => "App {$this->apiKey}",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->post("{$this->baseUrl}/sms/3/messages", [
+                'messages' => [
+                    [
+                        'destinations' => [
+                            ['to' => $to],
+                        ],
+                        'from' => $this->from,
+                        'text' => $message->message,
+                        'webhooks' => [
+                            'delivery' => [
+                                'url' => $message->extraPayload['notifyUrl'] ?? null,
+                                'intermediateReport' => true,
+                            ],
+                            'contentType' => 'application/json',
+                        ],
+                    ]
+                ]
+            ]);
+
+            return new JsonResponse($response->body());
+        }
     }
 }
