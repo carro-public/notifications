@@ -85,7 +85,9 @@ class InfobipSender extends Sender
                             ['to' => $to],
                         ],
                         'from' => $this->from,
-                        'text' => $message->message,
+                        'content' => [
+                            'text' => $message->message,
+                        ],
                         'webhooks' => [
                             'delivery' => [
                                 'url' => $message->extraPayload['notifyUrl'] ?? null,
